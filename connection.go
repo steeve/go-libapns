@@ -34,6 +34,8 @@ type APNSConfig struct {
 	//max number of bytes to frame data to, defaults to TCP_FRAME_MAX
 	//generally best to NOT set this and use the default
 	MaxOutboundTCPFrameSize int
+	// don't use TLS
+	SkipTLS bool
 	//number of seconds to wait for connection before bailing, defaults to no timeout
 	SocketTimeout int
 	//number of seconds to wait for Tls handshake to complete before bailing, defaults to no timeout
@@ -198,6 +200,10 @@ func NewAPNSConnection(config *APNSConfig) (*APNSConnection, error) {
 		return nil, err
 	}
 
+	if config.SkipTLS {
+		return socketAPNSConnection(tcpSocket, config), nil
+	}
+
 	tlsSocket, err := createTLSClient(tcpSocket, config)
 
 	if err != nil {
@@ -213,6 +219,10 @@ func SocketAPNSConnection(socket net.Conn, config *APNSConfig) (*APNSConnection,
 
 	if err != nil {
 		return nil, err
+	}
+
+	if config.SkipTLS {
+		return socketAPNSConnection(socket, config), nil
 	}
 
 	tlsSocket, err := createTLSClient(socket, config)
