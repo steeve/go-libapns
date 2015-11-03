@@ -518,7 +518,7 @@ func (c *APNSConnection) bufferPayload(idPayloadObj *idPayload) error {
 	// write priority if set correctly
 	if idPayloadObj.Payload.Priority == 10 || idPayloadObj.Payload.Priority == 5 {
 		binary.Write(c.inFlightItemByteBuffer, binary.BigEndian, uint8(5))
-		binary.Write(c.inFlightItemByteBuffer, binary.BigEndian, uint16(4))
+		binary.Write(c.inFlightItemByteBuffer, binary.BigEndian, uint16(1))
 		binary.Write(c.inFlightItemByteBuffer, binary.BigEndian, idPayloadObj.Payload.Priority)
 	}
 
