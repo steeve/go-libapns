@@ -336,9 +336,9 @@ func (c *APNSConnection) noFlushDisconnect() {
 // go-routine to listen for socket closes or apple response information
 func (c *APNSConnection) closeListener(errc chan *AppleError) {
 	buffer := make([]byte, 6, 6)
-	_, err := c.socket.Read(buffer)
+	readLen, err := c.socket.Read(buffer)
 
-	if err != nil {
+	if readLen == 0 && err != nil {
 		c.Lock()
 		defer c.Unlock()
 
